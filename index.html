@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Dev Quiz</title>
+
+	<!-- Styles -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		
+	<!-- /Styles -->
+	<!-- Javascripts -->
+
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+		
+
+	<!-- /Javascripts -->
+</head>
+<body>
+	<h1>Dev quiz</h1>
+	<hr>
+	
+	<div class="row">
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
+			<button id="load-data" class="btn btn-primary float-right">Load Data</button>
+			<table class="table center" id="devquiz">
+			  <thead>
+			    <tr>
+			      <th scope="col">id</th>
+			      <th scope="col">name</th>
+			      <th scope="col">url</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr id="emptyRow">
+			    	<td colspan="3"> <center> Empty </center> </td>
+			    </tr>
+			  </tbody>
+			</table>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+	
+	
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script id="table-rows" type="text/x-handlebars-template">
+	{{#each rows}}
+		<tr>
+	      <th scope="row">{{id}}</th>
+	      <td>{{name}}</td>
+	      <td>{{url}}</td>
+	    </tr>
+	   {{/each}}
+</script>
+
+<script>
+  // compile the template
+  var myInfo = $("#table-rows").text();
+  // execute the compiled template and print the output to the console
+  var template = Handlebars.compile(myInfo);
+  $("#load-data").click(function(evt){
+			$.ajax({
+			  	url:"https://aimtell.com/files/sites.json",
+			  	type:"get",
+			  	dataType:"json",
+			  	beforeSend:function(xhr){
+			  			$("#devquiz tbody").html("<tr><td><center> Please Wait .. </center></td></tr>");
+			  	},
+			  	success:function (data) {
+			  			if (data.count > 0) 
+			  				{
+			  					 console.log(data.sites);
+			  					
+			  					$("#devquiz tbody").html(template({ rows : data.sites}));			
+			  				}
+			  			
+			  	},
+			  	error:function(e,f,xhr){
+			  		$("#devquiz tbody").html("<tr><td><center> Snap! Some error occurred .. </center></td></tr>");
+			  	}
+			  });
+  });
+
+  
+
+
+
+</script>
+
+</html>
